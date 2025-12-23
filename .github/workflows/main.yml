@@ -1,29 +1,19 @@
-name: Update News Database
-
+name: Build Database
 on:
   push:
-    paths:
-      - 'Pages/**' # Chỉ chạy khi có thay đổi trong thư mục Pages
-
+    paths: ['Pages/**']
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions: { contents: write }
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      - name: Run build script
+      - uses: actions/checkout@v3
+      - name: Run script
         run: python build_database.py
-
-      - name: Commit and Push changes
+      - name: Deploy
         run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
+          git config --global user.name "Bot"
+          git config --global user.email "bot@github.com"
           git add assets/database.js
-          git commit -m "Auto-update database.js" || exit 0
+          git commit -m "Update db" || exit 0
           git push
