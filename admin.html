@@ -2,44 +2,55 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Đăng bài qua GitHub Actions</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Admin - Quản lý bài viết</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        .admin-form { max-width: 600px; margin: 50px auto; padding: 20px; background: #f4f4f4; border-radius: 8px; }
+        input, textarea, select { width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+    </style>
 </head>
 <body>
-    <div class="container" style="margin-top: 50px;">
-        <div class="card" style="padding: 30px;">
-            <h2 style="color: #0066cc;">Viết bài mới</h2>
-            <p>Sau khi nhấn "Gửi", bạn chỉ cần nhấn <b>Submit New Issue</b> ở trang hiện ra.</p>
-            
-            <input type="text" id="title" placeholder="Tiêu đề bài viết">
-            <select id="category">
-                <option value="PC">PC</option>
-                <option value="MAC">MAC</option>
-                <option value="Mobile">Mobile</option>
-                <option value="Other">Other</option>
-            </select>
-            <input type="text" id="image" placeholder="Tên file ảnh (ví dụ: pc01.jpg)">
-            <textarea id="summary" rows="5" placeholder="Nội dung tóm tắt..."></textarea>
-            
-            <button onclick="publishToGitHub()" class="btn" style="background:#0066cc; color:white; border:none; padding:15px; width:100%; cursor:pointer; font-weight:bold; border-radius:5px;">GỬI BÀI VIẾT</button>
-        </div>
+    <div class="admin-form">
+        <h2>Tạo bài viết mới</h2>
+        <input type="text" id="title" placeholder="Tiêu đề bài viết">
+        <select id="category">
+            <option value="PC">PC</option>
+            <option value="MAC">MAC</option>
+            <option value="Mobile">Mobile</option>
+            <option value="Other">Other</option>
+        </select>
+        <input type="text" id="image" placeholder="Tên file ảnh (vd: laptop.jpg)">
+        <textarea id="content" rows="10" placeholder="Nội dung bài viết (có thể dùng HTML)"></textarea>
+        <button onclick="generateJS()">Tải file dữ liệu (.js)</button>
+        <p><small>* Sau khi tải về, hãy copy vào đúng thư mục Pages/[Chuyên mục]/</small></p>
     </div>
 
     <script>
-        function publishToGitHub() {
+        function generateJS() {
             const title = document.getElementById('title').value;
             const category = document.getElementById('category').value;
             const image = document.getElementById('image').value;
-            const summary = document.getElementById('summary').value;
-            const repoUrl = "https://github.com/huynt89/Blog/issues/new"; // Thay link này
+            const content = document.getElementById('content').value;
+            const date = new Date().toISOString().split('T')[0];
+            const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
 
-            const body = `TITLE: ${title}\nCATEGORY: ${category}\nIMAGE: ${image}\nSUMMARY: ${summary}`;
-            const label = "new-post";
-            
-            // Tạo link để mở Issue GitHub với dữ liệu điền sẵn
-            const finalUrl = `${repoUrl}?title=[POST] ${title}&body=${encodeURIComponent(body)}&labels=${label}`;
-            
-            window.open(finalUrl, '_blank');
+            const fileName = `data${category}_${slug}_${date}.js`;
+            const fileContent = `
+// Bài viết: ${title}
+window.techPosts.push({
+    title: "${title}",
+    category: "${category}",
+    date: "${date}",
+    image: "Pages/${category}/img/${image}",
+    content: \`${content}\`
+});`;
+
+            const blob = new Blob([fileContent], { type: 'text/javascript' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+            link.click();
         }
     </script>
 </body>

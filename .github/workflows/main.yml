@@ -1,0 +1,29 @@
+name: Update News Database
+
+on:
+  push:
+    paths:
+      - 'Pages/**' # Chỉ chạy khi có thay đổi trong thư mục Pages
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Run build script
+        run: python build_database.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add assets/database.js
+          git commit -m "Auto-update database.js" || exit 0
+          git push
