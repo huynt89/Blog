@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Đăng bài qua GitHub Actions</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" style="margin-top: 50px;">
+        <div class="card" style="padding: 30px;">
+            <h2 style="color: #0066cc;">Viết bài mới</h2>
+            <p>Sau khi nhấn "Gửi", bạn chỉ cần nhấn <b>Submit New Issue</b> ở trang hiện ra.</p>
+            
+            <input type="text" id="title" placeholder="Tiêu đề bài viết">
+            <select id="category">
+                <option value="PC">PC</option>
+                <option value="MAC">MAC</option>
+                <option value="Mobile">Mobile</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="text" id="image" placeholder="Tên file ảnh (ví dụ: pc01.jpg)">
+            <textarea id="summary" rows="5" placeholder="Nội dung tóm tắt..."></textarea>
+            
+            <button onclick="publishToGitHub()" class="btn" style="background:#0066cc; color:white; border:none; padding:15px; width:100%; cursor:pointer; font-weight:bold; border-radius:5px;">GỬI BÀI VIẾT</button>
+        </div>
+    </div>
+
+    <script>
+        function publishToGitHub() {
+            const title = document.getElementById('title').value;
+            const category = document.getElementById('category').value;
+            const image = document.getElementById('image').value;
+            const summary = document.getElementById('summary').value;
+            const repoUrl = "https://github.com/huynt89/Blog/issues/new"; // Thay link này
+
+            const body = `TITLE: ${title}\nCATEGORY: ${category}\nIMAGE: ${image}\nSUMMARY: ${summary}`;
+            const label = "new-post";
+            
+            // Tạo link để mở Issue GitHub với dữ liệu điền sẵn
+            const finalUrl = `${repoUrl}?title=[POST] ${title}&body=${encodeURIComponent(body)}&labels=${label}`;
+            
+            window.open(finalUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
