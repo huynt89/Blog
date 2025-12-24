@@ -3,31 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech News - Tin Tức Công Nghệ</title>
-    <link rel="stylesheet" href="assets/style.css">
-    <script src="assets/database.js"></script>
+    <title>HuyNT Tech Blog</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <div class="container">
-            <h1>TECH NEWS</h1>
+        <div class="top-nav">
             <nav>
-                <ul>
-                    <li><a href="#" onclick="filterCategory('All')">Tất cả</a></li>
-                    <li><a href="#" onclick="filterCategory('PC')">PC</a></li>
-                    <li><a href="#" onclick="filterCategory('MAC')">MAC</a></li>
-                    <li><a href="#" onclick="filterCategory('Mobile')">Mobile</a></li>
-                    <li><a href="#" onclick="filterCategory('Other')">Khác</a></li>
-                </ul>
+                <a href="index.html">Trang chủ</a>
+                <a href="#">Windows</a>
+                <a href="#">Boot USB</a>
+                <a href="#">Phần mềm</a>
+                <a href="#">Drivers</a>
             </nav>
         </div>
     </header>
 
     <main class="container">
-        <div id="post-container" class="news-grid">
-            </div>
+        <div class="breadcrumb">Trang chủ » Windows</div>
+        <h2 class="category-title">Danh mục: <span>Windows</span></h2>
+        
+        <div class="main-layout">
+            <section class="post-grid" id="post-container">
+                </section>
+
+            <aside class="sidebar">
+                <div class="widget">
+                    <h3>Chuyên mục <span class="badge">Drivers</span></h3>
+                    <ul id="cat-list">
+                        <li>Boot USB (59)</li>
+                        <li>Drivers (12)</li>
+                        <li>Phần mềm (81)</li>
+                        <li>Windows (181)</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
     </main>
 
-    <script src="assets/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
