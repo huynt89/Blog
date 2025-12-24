@@ -1,0 +1,64 @@
+name: CMS Content Engine
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  process-post:
+    if: contains(github.event.issue.title, '[PUBLISH]')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Extract Data & Create Files
+        shell: bash
+        run: |
+          # 1. Lấy dữ liệu JSON từ body của Issue
+          ISSUE_BODY='${{ github.event.issue.body }}'
+          JSON_DATA=$(echo "$ISSUE_BODY" | sed -n '/```json/,/```/p' | sed '1d;$d')
+          
+          TITLE=$(echo "$JSON_DATA" | jq -r '.data.title')
+          CAT=$(echo "$JSON_DATA" | jq -r '.data.category')
+          SUM=$(echo "$JSON_DATA" | jq -r '.data.summary')
+          IMG=$(echo "$JSON_DATA" | jq -r '.data.image')
+          
+          # 2. Tạo Slug và đường dẫn
+          DATE=$(date +'%Y-%m-%d')
+          SLUG=$(echo "$TITLE" | iconv -t ascii//TRANSLIT | sed -r 's/[^a-zA-Z0-9]+/-/g' | tr '[:upper:]' '[:lower:]' | sed 's/^-//;s/-$//')
+          FILE_NAME="data${CAT}_${SLUG}_${DATE}.js"
+          DIR="Pages/${CAT}"
+          
+          mkdir -p "$DIR"
+          
+          # 3. Tạo file JS bài viết
+          echo "window.lastLoadedPost = {
+            title: \"$TITLE\",
+            summary: \"$SUM\",
+            image: \"$IMG\",
+            category: \"$CAT\",
+            date: \"$DATE\"
+          };" > "$DIR/$FILE_NAME"
+
+          # 4. Cập nhật database.json chuyên nghiệp
+          # Tìm tất cả file .js và tạo mảng JSON
+          echo "{\"posts\": [" > database.json
+          find Pages -name "data*.js" | sort -r | sed 's/^/"/;s/$/"/' | paste -sd "," - >> database.json
+          echo "]}" >> database.json
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "HuyNT-CMS-Bot"
+          git config --global user.email "cms-bot@github.com"
+          git add .
+          git commit -m "New Post: ${{ github.event.issue.title }}"
+          git push
+
+      - name: Close Issue
+        run: gh issue close ${{ github.event.issue.number }} --comment "✅ Bài viết đã được lên sóng tự động!"
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
