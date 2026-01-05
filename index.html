@@ -3,42 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HuyNT Tech - Thủ Thuật & Phần Mềm</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>TechNews - Cập nhật công nghệ mới nhất</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <header class="main-header">
-        <nav class="container">
-            <div class="logo">HUYNT <span>TECH</span></div>
-            <ul class="nav-links">
-                <li><a href="index.html">Trang chủ</a></li>
-                <li><a href="#">Windows</a></li>
-                <li><a href="#">Boot USB</a></li>
-                <li><a href="#">Phần mềm</a></li>
-            </ul>
-        </nav>
+    <header>
+        <div class="container">
+            <div class="logo">Tech<span>Blog</span></div>
+            <nav>
+                <ul id="nav-filters">
+                    <li class="active" data-filter="all">Tất cả</li>
+                    <li data-filter="PC">PC</li>
+                    <li data-filter="MAC">Mac</li>
+                    <li data-filter="Mobile">Mobile</li>
+                    <li data-filter="Other">Khác</li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <main class="container main-content">
-        <nav class="breadcrumb">Trang chủ » Windows</nav>
-        
-        <div class="content-layout">
-            <section class="post-grid" id="post-container">
-                </section>
+    <main class="container">
+        <section id="featured-post" class="hero-section">
+            </section>
 
-            <aside class="sidebar">
-                <div class="widget">
-                    <h3 class="widget-title">Chuyên mục</h3>
-                    <ul class="cat-list">
-                        <li><span>Windows</span> <span class="count">181</span></li>
-                        <li><span>Drivers</span> <span class="count">12</span></li>
-                        <li><span>Thủ thuật</span> <span class="count">45</span></li>
-                    </ul>
-                </div>
-            </aside>
+        <div class="section-title">
+            <h2>Bài viết mới nhất</h2>
+        </div>
+
+        <div id="blog-grid" class="blog-grid">
+            <div class="loading">Đang tải dữ liệu...</div>
         </div>
     </main>
 
-    <script src="assets/js/script.js"></script>
+    <footer>
+        <p>&copy; 2024 TechBlog by HuyNT89. All rights reserved.</p>
+    </footer>
+
+    <script src="js/blog_data.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

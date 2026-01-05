@@ -2,59 +2,27 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>CMS Admin - HuyNT</title>
-    <style>
-        body { font-family: sans-serif; background: #eaeff2; padding: 40px; }
-        .admin-box { max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button { background: #238636; color: white; border: none; padding: 15px; width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 16px; }
-        .note { font-size: 12px; color: #666; margin-bottom: 20px; }
-    </style>
+    <title>Admin - Đăng bài nhanh</title>
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-    <div class="admin-box">
-        <h2>🚀 Đăng bài viết mới</h2>
-        <p class="note">Lưu ý: Bạn cần đăng nhập GitHub để xác nhận việc đăng bài.</p>
-        
+    <div class="admin-container">
+        <h2>Hệ thống đăng bài</h2>
+        <input type="password" id="token" placeholder="Nhập PAT Token (chỉ lần đầu)">
+        <hr>
         <input type="text" id="title" placeholder="Tiêu đề bài viết">
         <select id="category">
-            <option value="PC">Máy tính (PC)</option>
+            <option value="PC">PC</option>
             <option value="MAC">MAC</option>
-            <option value="Mobile">Điện thoại</option>
+            <option value="Mobile">Mobile</option>
             <option value="Other">Khác</option>
         </select>
-        <textarea id="summary" rows="5" placeholder="Mô tả ngắn gọn nội dung bài viết..."></textarea>
-        <input type="text" id="imgUrl" placeholder="Dán URL ảnh vào đây (hoặc upload vào Issue sau)">
-        
-        <button onclick="publish()">Xác nhận đăng bài</button>
+        <input type="file" id="image-file" accept="image/*">
+        <textarea id="content" placeholder="Nội dung bài viết..." rows="10"></textarea>
+        <button onclick="publishPost()">Đăng bài ngay</button>
+        <p id="status"></p>
     </div>
 
-    <script>
-        function publish() {
-            const title = document.getElementById('title').value;
-            const category = document.getElementById('category').value;
-            const summary = document.getElementById('summary').value;
-            const img = document.getElementById('imgUrl').value || "https://via.placeholder.com/400x250";
-
-            if (!title || !summary) return alert("Vui lòng điền tiêu đề và nội dung!");
-
-            // Tạo payload JSON để GitHub Action parse
-            const payload = {
-                version: "1.0",
-                type: "POST_PUBLISH",
-                data: {
-                    title: title,
-                    category: category,
-                    summary: summary,
-                    image: img
-                }
-            };
-
-            const bodyIssue = "```json\n" + JSON.stringify(payload, null, 2) + "\n```";
-            const url = `https://github.com/huynt89/Blog/issues/new?title=${encodeURIComponent("[PUBLISH]: " + title)}&body=${encodeURIComponent(bodyIssue)}&labels=cms-post`;
-            
-            window.open(url, '_blank');
-        }
-    </script>
+    <script src="js/admin_script.js"></script>
 </body>
 </html>

@@ -1,0 +1,46 @@
+name: Admin Post Handler
+on:
+  repository_dispatch:
+    types: [create_post]
+
+permissions:
+  contents: write
+
+jobs:
+  create_file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Save Post Data
+        run: |
+          # Tạo thư mục nếu chưa có
+          mkdir -p raw_data
+          mkdir -p img
+          
+          # Lưu nội dung bài viết từ payload của Admin vào file json
+          echo '${{ toJson(github.event.client_payload.post_data) }}' > raw_data/${{ github.event.client_payload.post_id }}.json
+          
+          # Xử lý ảnh (Admin sẽ gửi ảnh dưới dạng base64)
+          echo "${{ github.event.client_payload.image_base64 }}" | base64 --decode > img/${{ github.event.client_payload.image_name }}
+
+      - name: Build Blog Data JS
+        run: |
+          echo "const blogPosts = [" > js/blog_data.js
+          first=true
+          for file in raw_data/*.json; do
+            if [ "$file" != "raw_data/init.json" ]; then
+              [ "$first" = true ] && first=false || echo "," >> js/blog_data.js
+              cat "$file" >> js/blog_data.js
+            fi
+          done
+          echo "];" >> js/blog_data.js
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'Admin System'
+          git config --global user.email 'admin@github.com'
+          git add .
+          git commit -m "New post: ${{ github.event.client_payload.post_data.title }}"
+          git push
